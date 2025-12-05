@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Menu, X, Wallet, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Menu, X, ExternalLink, Activity } from 'lucide-react';
 import xandeumLogo from '@/assets/xandeum-logo.png';
 
 const navLinks = [
   { label: 'Dashboard', href: '#dashboard' },
-  { label: 'Docs', href: '#docs', external: true },
+  { label: 'Docs', href: 'https://docs.xandeum.network', external: true },
 ];
 
 const Navbar = () => {
@@ -30,6 +29,8 @@ const Navbar = () => {
               <a
                 key={link.label}
                 href={link.href}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noopener noreferrer" : undefined}
                 className="text-muted-foreground hover:text-foreground transition-colors duration-200 flex items-center gap-1.5 text-sm font-medium"
               >
                 {link.label}
@@ -38,12 +39,13 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Connect Wallet Button */}
+          {/* Right Side: Price Ticker (Replaces Wallet) */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="wallet" className="gap-2">
-              <Wallet className="h-4 w-4" />
-              Connect Wallet
-            </Button>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/30 border border-border/50 text-xs font-mono text-muted-foreground">
+              <Activity className="h-3 w-3 text-primary" />
+              <span>XAND: $0.042</span>
+              <span className="text-success">+2.4%</span>
+            </div>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -70,10 +72,6 @@ const Navbar = () => {
                 {link.label}
               </a>
             ))}
-            <Button variant="wallet" className="w-full gap-2 mt-4">
-              <Wallet className="h-4 w-4" />
-              Connect Wallet
-            </Button>
           </div>
         </div>
       )}

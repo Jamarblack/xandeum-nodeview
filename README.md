@@ -1,73 +1,30 @@
-# Welcome to your Lovable project
+# Xandeum Analytics Dashboard 🛡️
 
-## Project info
+> A real-time, decentralized network monitor for Xandeum pNodes.
+> **Winner of the Xandeum "Build Analytics Platform" Bounty** (Hopefully!)
 
-**URL**: https://lovable.dev/projects/35a477ab-222e-406d-98e4-665e2f2b0d7d
+![Dashboard Screenshot](./public/screenshot.png)
 
-## How can I edit this code?
+##  Mission
+This platform provides deep visibility into the Xandeum storage layer. Unlike standard block explorers, Xandeum Analytics focuses specifically on the health, uptime, and geographic distribution of **pNodes**—the backbone of Xandeum's scalable storage.
 
-There are several ways of editing your application.
+##  Key Features
+* **Real-Time Gossip Monitoring:** Connects directly to the Solana/Xandeum RPC to listen for cluster nodes.
+* **"Demo Mode" Toggle:** A developer-friendly feature allowing users to toggle between live RPC data and a simulated high-traffic network state.
+* **Global Node Map:** Visualizes the decentralization of the network.
+* **Health Scoring Engine:** Calculates a composite "Reputation Score" based on uptime and version consistency.
 
-**Use Lovable**
+##  Tech Stack
+* **Framework:** React + Vite (Lightning fast)
+* **Language:** TypeScript (Strict typing for RPC responses)
+* **Styling:** Tailwind CSS + Shadcn/ui (Professional, responsive design)
+* **Data:** `@solana/web3.js` for RPC connection.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/35a477ab-222e-406d-98e4-665e2f2b0d7d) and start prompting.
+##  How to Run
+1.  Clone the repo
+2.  `npm install`
+3.  `npm run dev`
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/35a477ab-222e-406d-98e4-665e2f2b0d7d) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+##  Future Roadmap
+* **Deep Storage Inspection:** Integration with specific pRPC methods to verify stored fragments.
+* **Validator Alerts:** Telegram/Discord bot integration for uptime alerts.

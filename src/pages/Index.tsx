@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Server, Activity, Globe, Shield, Zap, TrendingUp } from 'lucide-react';
+import { useState } from 'react';
+import { Server, Activity, Globe, Shield, Zap, TrendingUp, RefreshCw } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import StatCard from '@/components/dashboard/StatCard';
 import HealthScoreRing from '@/components/dashboard/HealthScoreRing';
@@ -8,16 +8,21 @@ import NodeTable from '@/components/dashboard/NodeTable';
 import NetworkMap from '@/components/dashboard/NetworkMap';
 import AnalyticsCharts from '@/components/dashboard/AnalyticsCharts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { mockNodes, calculateNetworkStats, uptimeHistory } from '@/data/mockNodes';
+import { useNodeData } from '@/hooks/useNodeData';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { uptimeHistory } from '@/data/mockNodes'; // Keep for chart fallback if needed
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('explorer');
-  
-  const networkStats = useMemo(() => calculateNetworkStats(mockNodes), []);
-  const uptimeSparklineData = useMemo(
-    () => uptimeHistory.map(d => d.uptime),
-    []
-  );
+  const [useMock, setUseMock] = useState(false); // Toggle for development/demo
+
+  // Fetch real data (or mock if toggled)
+  const { nodes, stats, loading, lastRefreshed, refresh } = useNodeData(useMock);
+
+  // Memoize chart data based on real nodes or fallback to mock history
+  const uptimeSparklineData = uptimeHistory.map(d => d.uptime);
 
   return (
     <div className="min-h-screen bg-background">
@@ -30,21 +35,38 @@ const Index = () => {
       
       <main className="pt-24 pb-12 px-4">
         <div className="container mx-auto max-w-7xl">
-          {/* Header */}
-          <div className="mb-8 animate-fade-in">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">
-              <span className="text-gradient">Network</span> Dashboard
-            </h1>
-            <p className="text-muted-foreground">
-              Real-time monitoring and analytics for the Xandeum pNode network
-            </p>
+          {/* Header with Controls */}
+          <div className="mb-8 animate-fade-in flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                <span className="text-gradient">Network</span> Dashboard
+              </h1>
+              <p className="text-muted-foreground">
+                Real-time monitoring and analytics for the Xandeum pNode network
+              </p>
+            </div>
+
+            {/* Control Panel */}
+            <div className="flex items-center gap-4 bg-card/50 p-2 rounded-lg border border-border/50 backdrop-blur-sm">
+              <div className="flex items-center gap-2 px-2">
+                <Switch id="mock-mode" checked={useMock} onCheckedChange={setUseMock} />
+                <Label htmlFor="mock-mode" className="text-xs text-muted-foreground cursor-pointer">Demo Mode</Label>
+              </div>
+              <div className="h-4 w-[1px] bg-border" />
+              <div className="text-xs text-muted-foreground min-w-[80px] text-right">
+                {loading ? 'Updating...' : `Updated: ${lastRefreshed.toLocaleTimeString()}`}
+              </div>
+              <Button variant="ghost" size="icon" onClick={refresh} disabled={loading} className="h-8 w-8">
+                <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              </Button>
+            </div>
           </div>
 
           {/* Stats Grid */}
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
             <StatCard
               title="Total pNodes Online"
-              value={`${networkStats.activeNodes}/${networkStats.totalNodes}`}
+              value={loading && !nodes.length ? "..." : `${stats.activeNodes}/${stats.totalNodes}`}
               icon={<Server className="h-5 w-5" />}
               trend="up"
               trendValue="+2 today"
@@ -52,15 +74,15 @@ const Index = () => {
               style={{ animationDelay: '0.1s' } as React.CSSProperties}
             >
               <div className="flex items-center gap-4 text-sm">
-                <span className="text-success">{networkStats.activeNodes} active</span>
-                <span className="text-warning">{networkStats.gossipNodes} gossip</span>
-                <span className="text-destructive">{networkStats.offlineNodes} offline</span>
+                <span className="text-success">{stats.activeNodes} active</span>
+                <span className="text-warning">{stats.gossipNodes} gossip</span>
+                <span className="text-destructive">{stats.offlineNodes} offline</span>
               </div>
             </StatCard>
 
             <StatCard
               title="Global Avg. Uptime"
-              value={`${networkStats.averageUptime}%`}
+              value={loading && !nodes.length ? "..." : `${stats.averageUptime}%`}
               icon={<Activity className="h-5 w-5" />}
               trend="up"
               trendValue="+0.3%"
@@ -72,7 +94,7 @@ const Index = () => {
 
             <StatCard
               title="Most Active Region"
-              value={networkStats.mostActiveRegion.replace('-', ' ')}
+              value={loading && !nodes.length ? "..." : stats.mostActiveRegion.replace('-', ' ')}
               icon={<Globe className="h-5 w-5" />}
               subtitle="Based on node density"
               className="animate-fade-in"
@@ -87,7 +109,7 @@ const Index = () => {
               style={{ animationDelay: '0.25s' } as React.CSSProperties}
             >
               <div className="flex items-center justify-center -mt-2">
-                <HealthScoreRing score={networkStats.networkHealthScore} size={100} />
+                <HealthScoreRing score={stats.networkHealthScore} size={100} />
               </div>
             </StatCard>
           </section>
@@ -96,7 +118,7 @@ const Index = () => {
           <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-8">
             <StatCard
               title="Total Network Stake"
-              value={`${(networkStats.totalStake / 1000000).toFixed(2)}M`}
+              value={`${(stats.totalStake / 1000000).toFixed(2)}M`}
               icon={<Zap className="h-5 w-5" />}
               trend="up"
               trendValue="+125K"
@@ -141,11 +163,11 @@ const Index = () => {
               </TabsList>
 
               <TabsContent value="explorer" className="mt-6">
-                <NodeTable nodes={mockNodes} />
+                <NodeTable nodes={nodes} />
               </TabsContent>
 
               <TabsContent value="map" className="mt-6">
-                <NetworkMap nodes={mockNodes} />
+                <NetworkMap nodes={nodes} />
               </TabsContent>
 
               <TabsContent value="analytics" className="mt-6">

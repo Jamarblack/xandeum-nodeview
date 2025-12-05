@@ -26,7 +26,8 @@ const statusConfig: Record<NodeStatus, { color: string; bgColor: string; label: 
 };
 
 const StatusBadge = ({ status, showLabel = true, size = 'md' }: StatusBadgeProps) => {
-  const config = statusConfig[status];
+  // Safe fallback if status is somehow undefined or invalid
+  const config = statusConfig[status] || statusConfig.Offline;
 
   const sizeClasses = {
     sm: 'h-1.5 w-1.5',
