@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@layer base {
+  :root {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 168 84% 50%;
+    --primary-foreground: 222 47% 6%;
+
+    --secondary: 222 47% 14%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 222 30% 16%;
+    --muted-foreground: 215 20% 55%;
+
+    --accent: 262 83% 58%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 46%;
+    --success-foreground: 222 47% 6%;
+
+    --warning: 45 93% 58%;
+    --warning-foreground: 222 47% 6%;
+
+    --border: 222 30% 18%;
+    --input: 222 30% 18%;
+    --ring: 168 84% 50%;
+
+    --radius: 0.75rem;
+
+    /* Custom design tokens */
+    --neon-cyan: 180 100% 50%;
+    --neon-green: 142 76% 46%;
+    --neon-purple: 262 83% 58%;
+    --neon-pink: 330 80% 60%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(168 84% 50%), hsl(142 76% 46%));
+    --gradient-accent: linear-gradient(135deg, hsl(262 83% 58%), hsl(330 80% 60%));
+    --gradient-card: linear-gradient(145deg, hsl(222 47% 10%), hsl(222 47% 6%));
+    --gradient-glow: radial-gradient(circle at center, hsl(168 84% 50% / 0.15), transparent 70%);
+    
+    --shadow-neon: 0 0 20px hsl(168 84% 50% / 0.3);
+    --shadow-card: 0 4px 24px hsl(222 47% 4% / 0.5);
+    --shadow-glow-sm: 0 0 10px hsl(168 84% 50% / 0.2);
+
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 168 84% 50%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 222 47% 14%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 222 30% 18%;
+    --sidebar-ring: 168 84% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  code, pre, .mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50 rounded-xl;
+    background: linear-gradient(145deg, hsl(var(--card) / 0.9), hsl(var(--background) / 0.8));
+  }
+
+  .neon-border {
+    @apply relative;
+    &::before {
+      content: '';
+      @apply absolute inset-0 rounded-xl opacity-50;
+      background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+      padding: 1px;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+  }
+
+  .status-pulse {
+    @apply relative;
+    &::after {
+      content: '';
+      @apply absolute inset-0 rounded-full animate-ping;
+      background: inherit;
+      opacity: 0.4;
+    }
+  }
+
+  .stat-glow {
+    @apply relative overflow-hidden;
+    &::before {
+      content: '';
+      @apply absolute -inset-1 opacity-20 blur-2xl;
+      background: var(--gradient-primary);
+    }
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+
+  .text-gradient-accent {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-accent);
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300;
+    &:hover {
+      box-shadow: var(--shadow-neon);
+    }
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+  }
+}
+
+/* Custom keyframe animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
