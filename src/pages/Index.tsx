@@ -193,7 +193,7 @@ const Index = () => {
 
           {/* Footer */}
           <footer className="mt-16 pt-8 border-t border-border/50 text-center text-sm text-muted-foreground">
-            <p>Xandeum pNode Analytics Platform • Built for Hackathon 2024</p>
+            <p>Xandeum pNode Analytics Platform • Built for Hackathon 2025</p>
             <p className="mt-1 text-xs">
               Powered by real-time network telemetry
             </p>
